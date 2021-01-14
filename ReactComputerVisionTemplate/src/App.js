@@ -14,10 +14,6 @@ function App (){
             <Route exact path='/cam'>
                 <Cam />
             </Route>
-        
-            
-            
-       
         </Switch>
         </div>
     )
