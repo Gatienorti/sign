@@ -19,7 +19,6 @@ function Band (){
                     <li className="waitingImg">Thank You<img src={de}/></li>
                 </ul>
             </div>
-            <p>Click anywhere on the instruction to go away</p>
         </div>
     )
 }
