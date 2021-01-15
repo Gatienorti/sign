@@ -4,6 +4,8 @@ import * as tf from "@tensorflow/tfjs";
 import Webcam from "react-webcam";
 import "./App.css";
 import { nextFrame } from "@tensorflow/tfjs";
+import Speech from 'speak-tts'
+import Wait from './waitingBand'
 // 2. TODO - Import drawing utility here
 // e.g. import { drawRect } from "./utilities";
 
@@ -19,8 +21,39 @@ function Cam() {
     4:{name:'Yes', color:'blue'},
     5:{name:'No', color:'purple'},
 }
+const [finalWord,setFinalWord] = useState('')
 const [words,setWords] = useState('')
 // Define a drawing function
+const speech = new Speech()
+speech.init().then((data)=>{
+  console.log('speechis ready', data)
+}).catch(e=>{
+  console.error('and error', e)
+})
+speech.init({
+  volume: 1,
+     lang: 'en-GB',
+     rate: 1,
+     pitch: 1,
+     voice:'Google UK English Female',
+     splitSentences: true,
+     listeners: {
+         onvoiceschanged: (voices) => {
+            //  console.log("Event voiceschanged", voices)
+         }
+     }
+})
+
+  // speech.speak({
+  //   text:finalWord,
+  // }).then(()=>{
+  //   console.log('succses')
+  // }).catch(e=>{
+  //   console.log('eror',e)
+  // })
+  
+
+
 const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=>{
     for(let i=0; i<=boxes.length; i++){
         if(boxes[i] && classes[i] && scores[i]>threshold){
@@ -30,25 +63,39 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
             
             // Set styling
             ctx.strokeStyle = labelMap[text]['color']
-            ctx.lineWidth = 10
+            ctx.lineWidth = 5
             ctx.fillStyle = 'white'
             ctx.font = '30px Arial'         
             
             // DRAW!!
             ctx.beginPath()
-            ctx.fillText(labelMap[text]['name'] + ' ' + Math.round(scores[i]*100)/100, x*imgWidth, y*imgHeight-10)
+            ctx.fillText(Math.round(scores[i]*100)/100, x*imgWidth, y*imgHeight-10)
             ctx.rect(x*imgWidth, y*imgHeight, width*imgWidth/2.5, height*imgHeight/2);
             ctx.stroke()
-            
-            
-            console.log(labelMap[text]["name"])
             if(words !== labelMap[text]['name']){
-                setWords(labelMap[text]["name"])
-            }
+            setWords(labelMap[text]["name"])
+           
+          }
             // setWord = labelMap[text]["name"]
         }
     }
 }
+
+if(words !== finalWord && words!== ''){
+  console.log(words)
+  setFinalWord(words)
+  speech.speak({
+    text:words,
+  }).then(()=>{
+    console.log('succses')
+  }).catch(e=>{
+    console.log('eror',e)
+  })
+  
+  
+}
+
+
   // Main function
   const runCoco = async () => {
     // 3. TODO - Load network 
@@ -59,7 +106,7 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
     //  Loop and detect hands
     setInterval(() => {
       detect(net);
-    }, 16.7);
+    }, 18.7);
   };
   
   const detect = async (net) => {
@@ -109,8 +156,14 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
 
     }
   };
-  
+   
+  function toggleWait (){
+    let waitBand = document.querySelector('.waited')
+    waitBand.classList.toggle('hidden')
+    console.log(waitBand)
+  }
   useEffect(()=>{runCoco()},[]);
+ 
 
   return (
     <div className="App">
@@ -122,13 +175,13 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
             position: "absolute",
             marginLeft: "1vw",
             marginRight: "auto",
-            left: 0,
+            left: '5vw',
             right: 0,
             textAlign: "center",
             zindex: 9,
-            width: '60vw',
-            height: '75vh',
-           
+            width: '45vw',
+            height: 'auto',
+           borderRadius: '15px'
           }}
         />
 
@@ -138,19 +191,23 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
             position: "absolute",
             marginLeft: "1vw",
             marginRight: "auto",
-            left: 0,
+            left: '5vw',
             right: 0,
             textAlign: "center",
             zindex: 8,
-            width: '60vw',
-            height: '75vh',
-  
+            width: '45vw',
+            height: 'auto',
+            borderRadius: '15px'
           }}
         />
       </header>
       <div className="text">
-        <p>{words}</p>
+        <p className='idtext'>{finalWord}</p>      
       </div>
+      <div className='waited'>
+        <Wait />
+      </div>
+      <button onClick={toggleWait}>Open an Close instruction</button>
     </div>
   );
 }
