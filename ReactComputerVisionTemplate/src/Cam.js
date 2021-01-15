@@ -207,7 +207,7 @@ if(words !== finalWord && words!== ''){
       <div className='waited'>
         <Wait />
       </div>
-      <button onClick={toggleWait}>Open an Close instruction</button>
+      <button onClick={toggleWait}>Open an Close Instruction</button>
     </div>
   );
 }
