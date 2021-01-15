@@ -5,6 +5,7 @@ import Webcam from "react-webcam";
 import "./App.css";
 import { nextFrame } from "@tensorflow/tfjs";
 import Speech from 'speak-tts'
+import Wait from './waitingBand'
 // 2. TODO - Import drawing utility here
 // e.g. import { drawRect } from "./utilities";
 
@@ -155,7 +156,12 @@ if(words !== finalWord && words!== ''){
 
     }
   };
-  
+   
+  function toggleWait (){
+    let waitBand = document.querySelector('.waited')
+    waitBand.classList.toggle('hidden')
+    console.log(waitBand)
+  }
   useEffect(()=>{runCoco()},[]);
  
 
@@ -196,10 +202,12 @@ if(words !== finalWord && words!== ''){
         />
       </header>
       <div className="text">
-        <p className='idtext'>{finalWord}</p>
-        
-        
+        <p className='idtext'>{finalWord}</p>      
       </div>
+      <div className='waited'>
+        <Wait />
+      </div>
+      <button onClick={toggleWait}>Open an Close instruction</button>
     </div>
   );
 }

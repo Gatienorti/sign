@@ -13,6 +13,27 @@
   height: 40vmin;
   pointer-events: none;
 }
+.waitingDiv{
+  display:flex;
+  justify-content: space-around;
+}
+.wait{
+  position:absolute;
+  padding:10px 10px;
+  border-radius: 15px;
+  border:solid 2px rgb(201, 196, 196);
+  background-color: white;
+  width: 65vw;
+  top:30vh;
+  left:15vw;
+  }
+.waitingImg{
+  list-style:none;
+}
+.waitingImg img{
+  width:160px;
+  height:160px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -79,11 +100,21 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.hidden{
+  opacity:0;
+}
 .App-link {
   color: #61dafb;
 }
-
+.App button{
+  position:absolute;
+  bottom:3vh;
+  left:45vw;
+  border-radius: 15px;
+  padding:5px;
+  color:white;
+  background:rgba(0, 0, 0, 0.479);
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
