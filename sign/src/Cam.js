@@ -1,8 +1,9 @@
-// Import dependencies
+
 import React, { useRef, useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import Webcam from "react-webcam";
 import "./App.css";
+import {Link} from "react-router-dom"
 import { nextFrame } from "@tensorflow/tfjs";
 import Speech from 'speak-tts'
 import Wait from './waitingBand'
@@ -24,34 +25,26 @@ function Cam() {
 const [finalWord,setFinalWord] = useState('')
 const [words,setWords] = useState('')
 // Define a drawing function
-const speech = new Speech()
-speech.init().then((data)=>{
-  console.log('speechis ready', data)
-}).catch(e=>{
-  console.error('and error', e)
-})
-speech.init({
-  volume: 1,
-     lang: 'en-GB',
-     rate: 1,
-     pitch: 1,
-     voice:'Google UK English Female',
-     splitSentences: true,
-     listeners: {
-         onvoiceschanged: (voices) => {
-            //  console.log("Event voiceschanged", voices)
-         }
-     }
-})
+// const speech = new Speech()
+// speech.init().then((data)=>{
+//   console.log('speechis ready', data)
+// }).catch(e=>{
+//   console.error('and error', e)
+// })
+// speech.init({
+//   volume: 1,
+//      lang: 'en-GB',
+//      rate: 1,
+//      pitch: 1,
+//      voice:'Google UK English Female',
+//      splitSentences: true,
+//      listeners: {
+//          onvoiceschanged: (voices) => {
+//             //  console.log("Event voiceschanged", voices)
+//          }
+//      }
+// })
 
-  // speech.speak({
-  //   text:finalWord,
-  // }).then(()=>{
-  //   console.log('succses')
-  // }).catch(e=>{
-  //   console.log('eror',e)
-  // })
-  
 
 
 const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=>{
@@ -84,13 +77,13 @@ const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight, ctx,)=
 if(words !== finalWord && words!== ''){
   console.log(words)
   setFinalWord(words)
-  speech.speak({
-    text:words,
-  }).then(()=>{
-    console.log('succses')
-  }).catch(e=>{
-    console.log('eror',e)
-  })
+  // speech.speak({
+  //   text:words,
+  // }).then(()=>{
+  //   console.log('succses')
+  // }).catch(e=>{
+  //   console.log('eror',e)
+  // })
   
   
 }
@@ -167,12 +160,22 @@ if(words !== finalWord && words!== ''){
 
   return (
     <div className="App">
+      <div className="header">
+                <h1>Welcome to My project</h1>
+                <div>
+              
+                <Link className="Link" to='./'>
+                    <p>Home</p>
+                </Link>
+                </div>
+       </div>
       <header className="App-header">
         <Webcam
           ref={webcamRef}
           muted={true} 
           style={{
             position: "absolute",
+            marginTop: "6vh",
             marginLeft: "1vw",
             marginRight: "auto",
             left: '5vw',
@@ -189,6 +192,7 @@ if(words !== finalWord && words!== ''){
           ref={canvasRef}
           style={{
             position: "absolute",
+            marginTop: "4vh",
             marginLeft: "1vw",
             marginRight: "auto",
             left: '5vw',
@@ -207,7 +211,7 @@ if(words !== finalWord && words!== ''){
       <div className='waited'>
         <Wait />
       </div>
-      <button onClick={toggleWait}>Open an Close instruction</button>
+      <button onClick={toggleWait}>Click to Open an Close instruction</button>
     </div>
   );
 }
